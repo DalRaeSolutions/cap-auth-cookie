@@ -40,7 +40,7 @@ class MockStrategyAugmented {
   }
 
   async authenticate(req) {
-    console.log('>> custom auth strategy, cookie present:', req?.signedCookies?.userattributes);
+    console.log('>> custom auth strategy, cookie present:', req?.session);
     //console.log('Custom mock strategy >>', 'start')
     const authorization = req.headers.authorization
     if (!authorization) return this.fail(CHALLENGE)

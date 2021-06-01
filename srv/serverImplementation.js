@@ -9,11 +9,15 @@ module.exports = async (app) => {
   app.use(async (req, res, next) => {
     if (!req?.signedCookies?.userattributes) {
       console.log('>> cookie not set, fetching data and setting cookie');
-      res.cookie('userattributes', JSON.stringify({
+
+      const attributes = JSON.stringify({
         businessEntities: [1, 2, 3]
-      }), cookieOptions);
+      });
+      req.session = attributes;
+      res.cookie('userattributes', attributes, cookieOptions);
     } else {
-      console.log('>> cookie set, all good')
+      req.session = req?.signedCookies?.userattributes
+      console.log('>> cookie set, all good');
     }
 
     next();
