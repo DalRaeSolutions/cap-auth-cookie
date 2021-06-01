@@ -10,16 +10,20 @@ module.exports = async (app) => {
   await app.use(passport.authenticate('mock', { session: false }))
 
   app.use(async (req, res, next) => {
-    console.log('>> setting cookie')
-    res.cookie('userattributes', JSON.stringify({
-      businessEntities: [1, 2, 3]
-    }), cookieOptions);
+    if (!req?.signedCookies?.userattributes) {
+      console.log('>> cookie not set, fetching data and setting cookie');
+      res.cookie('userattributes', JSON.stringify({
+        businessEntities: [1, 2, 3]
+      }), cookieOptions);
+    } else {
+      console.log('>> cookie set, all good')
+    }
 
     next();
   });
 
   app.use(async (req, res, next) => {
-    console.log(req?.signedCookies?.userattributes);
+    console.log('>> getting cookie', req?.signedCookies?.userattributes);
 
     next();
   });
