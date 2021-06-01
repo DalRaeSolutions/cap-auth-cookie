@@ -1,5 +1,4 @@
 const cds = require('@sap/cds');
-
 const CHALLENGE = 'Basic realm="Users"';
 
 const _getCustomRole = () => new Promise(resolve => setTimeout(() => resolve('Dummy'), 100))
@@ -41,6 +40,7 @@ class MockStrategyAugmented {
   }
 
   async authenticate(req) {
+    console.log('>> custom auth strategy, cookie present:', req?.signedCookies?.userattributes);
     //console.log('Custom mock strategy >>', 'start')
     const authorization = req.headers.authorization
     if (!authorization) return this.fail(CHALLENGE)
@@ -65,7 +65,6 @@ class MockStrategyAugmented {
     _roles.push(customRole);
 
     user = new cds.User({ id: user.ID || id, _roles, attr, tenant });
-    console.log('>> Custom mock strategy executing');
     // set _req for locale getter
     Object.defineProperty(user, '_req', { enumerable: false, value: req })
     this.success(user)
